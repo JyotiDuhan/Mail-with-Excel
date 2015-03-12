@@ -142,6 +142,9 @@ public function email()
     //sending mails
     foreach ($address as $key => $value) {
       $address=trim($value);
+      //validate if it is proper or not
+      $pattern = "/^([a-zA-Z0-9])+([a-zA-Z\._-])*@([a-zA-Z0-9])+(\.)+([a-zA-Z0-9\._-]+)+ $/";
+      if(preg_match($pattern,$address)){
       Mail::send('emails.message',['msg' => $message,'city'=>$input['city'],'total'=>$total],function($msg) use ($address,$from,$public_path){
        $msg->from($from,'The Media Ant');
        $msg->to($address)->subject('Radio Plan');
@@ -149,6 +152,11 @@ public function email()
        $msg->bcc(array('priya.darshini@themediaant.com'));
        $msg->attach($public_path);
       });
+      }
+      else
+      {
+        continue;
+      }
     }
 
     //save into email-store
